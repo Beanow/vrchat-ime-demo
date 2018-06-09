@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://unpkg.com/wanakana"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="vrIME.js"></script>
+    <style type="text/css">
+      #buffer{border-bottom:2px solid #555}
+      #inputTrap{width:500px}
+    </style>
+  </head>
+  <body>
+    <!-- Still needs styling. -->
+    <div id="log"></div>
+    <p><span id="suggestion"></span>&nbsp;</p>
+    <p><span id="mode"></span> |> <span id="output"></span><span id="buffer"></span></p>
+
+    <!-- Gives an input to test without VRChat sending events. -->
+    <input type="text" id="inputTrap" value="" placeholder="Use this to fake VRChat events">
+
+    <!-- Sets up the actual bindings. -->
+    <script type="text/javascript">
+      window.key = vrkb.bindIME({
+        log: '#log',
+        mode: '#mode',
+        output: '#output',
+        buffer: '#buffer',
+        trap: '#inputTrap',
+        suggestion: '#suggestion',
+        toHiragana: input => wanakana.toHiragana(input, {IMEMode: true}),
+        jQuery
+      });
+    </script>
+
+    <p>
+      Press [TAB] or [`] to switch input mode.<br>
+      Press [SPACE] to cycle through IME suggestions (JP only).<br>
+      Press [ENTER] to use the highlighted suggestion (JP only).<br>
+      Press [ENTER] again to send the message.<br>
+      Press [DEL] to remove the previous message.<br>
+      Be sure to test <code>javascript:key('a')</code> too.
+    </p>
+    <p>
+      <a href="https://qiita.com/katanov/items/8a7aed9a92c77528602f" target="_blank">Based on the great work done before me.</a><br>
+      <a href="https://bitbucket.org/purohit/jquery.intlkeyboard.js" target="_blank">And this library finding out how to use the APIs.</a>
+    </p>
+    <p>
+      3rd party libraries being used:
+      <ul>
+        <li>
+          <a href="https://www.google.com/inputtools/" target="_blank">https://inputtools.google.com</a> getting IME style suggestions.<br>
+          <em>Note: I have not found clear terms for using: <code>https://inputtools.google.com</code>, so I'm not sure using it this way is allowed by Google.</em>
+        </li>
+        <li><a href="https://jquery.com/download/" target="_blank">jQuery slim 3.3.1</a> for rendering elements and binding events.</li>
+        <li><a href="https://github.com/WaniKani/WanaKana/releases" target="_blank">WanaKana.js 4.0.1</a> for converting qwerty input to hiragana.</li>
+      </ul>
+    </p>
+  </body>
+</html>
