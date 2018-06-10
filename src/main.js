@@ -223,7 +223,7 @@ exports.bindIME = options => {
 		outputEl.html(state.output);
 		modeEl.html(state.mode);
 		logEl.html(`<div>${state.log.join('</div><div>')}</div>`);
-		trapEl.val('');
+		trapEl.val('').focus();
 	};
 
 	const {keyFn, initialState} = makeKeyFn(toHiragana, render);

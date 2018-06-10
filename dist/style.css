@@ -11,8 +11,6 @@ html, body, div, input {
 input {
   font: inherit;
   color: inherit;
-  margin: 0;
-  padding: 0;
 }
 html {
   font-family: Meiryo, sans-serif;
@@ -93,7 +91,11 @@ html, body {
   overflow: hidden;
   background: rgba(0, 0, 0, 0.95);
 }
-
+#inputTrap {
+  margin: 0;
+  padding: 0 0.1em;
+  width: 0.5em;
+}
 /*Browser testing*/
 @media only screen and (min-width: 1200px) {
   html{
