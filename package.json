@@ -1,0 +1,23 @@
+{
+  "name": "vrchat-ime-demo",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "https://github.com/Beanow",
+  "main": "dist/vrIME.js",
+  "scripts": {
+    "dist": "webpack -p --progress"
+  },
+  "dependencies": {
+    "url-search-params-polyfill": "^4.0.0",
+    "whatwg-fetch": "^2.0.4"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
+    "babel-plugin-transform-es2015-template-literals": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^2.1.5"
+  }
+}

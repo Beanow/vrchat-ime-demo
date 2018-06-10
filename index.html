@@ -1,12 +1,14 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>VRC Text Chat</title>
     <script src="https://unpkg.com/wanakana"></script>
     <script
         src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="vrIME.js"></script>
+    <script type="text/javascript" src="dist/vrIME.js"></script>
     <style type="text/css">
       #buffer{border-bottom:2px solid #555}
       #inputTrap{width:500px}
@@ -23,18 +25,41 @@
 
     <!-- Sets up the actual bindings. -->
     <script type="text/javascript">
-      window.key = vrkb.bindIME({
-        log: '#log',
-        mode: '#mode',
-        output: '#output',
-        buffer: '#buffer',
-        trap: '#inputTrap',
-        suggestion: '#suggestion',
-        toHiragana: input => wanakana.toHiragana(input, {IMEMode: true}),
-        jQuery
-      });
+      document.getElementById('log').innerHTML =
+        'Failed to initialize scripts.<br>' +
+        'TIME = ' + (new Date()).toISOString() + '<br>' +
+        'wanakana = ' + (window.wanakana&&'Y'||'N') + '<br>' +
+        'jQuery = ' + (window.jQuery&&'Y'||'N') + '<br>' +
+        'vrIME = ' + (window.vrIME&&'Y'||'N') + '<br>' +
+        'fetch = ' + (window.fetch&&'Y'||'N') + '<br>' +
+        'URLSearchParams = ' + (window.URLSearchParams&&'Y'||'N') + '<br>' +
+        'Promise = ' + (window.Promise&&'Y'||'N') + '<br>' +
+        navigator.userAgent;
     </script>
-
+    <script type="text/javascript">
+      try {
+        var toHiragana = function(input){
+          return wanakana.toHiragana(input, {IMEMode: true});
+        };
+        window.key = vrIME.bindIME({
+          log: '#log',
+          mode: '#mode',
+          output: '#output',
+          buffer: '#buffer',
+          trap: '#inputTrap',
+          suggestion: '#suggestion',
+          toHiragana: toHiragana,
+          jQuery: jQuery
+        });
+        window.text = function(str){
+          for(var i = 0; i < str.length; i++){
+            window.key(str[i]);
+          }
+        };
+      } catch(e) {
+        document.getElementById('log').innerHTML = 'Error binding IME' + e.toString();
+      }
+    </script>
     <p>
       Press [TAB] or [`] to switch input mode.<br>
       Press [SPACE] to cycle through IME suggestions (JP only).<br>
