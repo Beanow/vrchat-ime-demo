@@ -1,14 +1,28 @@
 'use strict';
 
-const path = require('path');
+const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-	entry: './src/main.js',
+	entry: {
+		style: './src/style.css',
+		main: './src/main.js'
+	},
 	output: {
-		filename: 'vrIME.js',
-		path: path.resolve(__dirname, 'dist'),
-		library: 'vrIME',
-		libraryTarget: 'window'
+		filename: 'build/[name].bundle.js',
+		chunkFilename: 'build/[name].bundle.js',
+		path: __dirname
+	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
+		}
 	},
 	module: {
 		rules: [
@@ -26,7 +40,23 @@ module.exports = {
 						]
 					}
 				}
+			},
+			{
+				test: /\.css$/,
+				use: [
+					{ loader: "style-loader" },
+					{ loader: "css-loader" }
+				]
 			}
 		]
-	}
+	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			template: './src/index.html',
+			filename: 'index.html',
+			inlineSource: '.(js|css)$' // embed all javascript and css inline
+		}),
+		new HtmlWebpackInlineSourcePlugin()
+		// new ExtractTextPlugin('./src/style.css')
+	]
 };
