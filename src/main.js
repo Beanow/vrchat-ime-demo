@@ -218,11 +218,11 @@ exports.bindIME = options => {
 			}
 			out += '<br>';
 		}
-		suggestionEl.html(out);
+		suggestionEl.html(out.length ? `<div id="suggestions">${out}</div>` : '');
 		bufferEl.html(state.suggest.length ? state.suggest[state.active] : state.buffer);
 		outputEl.html(state.output);
 		modeEl.html(state.mode);
-		logEl.html(state.log.join('<br>'));
+		logEl.html(`<div>${state.log.join('</div><div>')}</div>`);
 		trapEl.val('');
 	};
 

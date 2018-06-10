@@ -1,0 +1,102 @@
+html, body, div, input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  box-sizing: border-box;
+  background: transparent;
+}
+input {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: Meiryo, sans-serif;
+  color: white;
+  font-size: 36px;
+  line-height: 1;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#logs {
+  position: fixed;
+  bottom: 2.8em;
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+#logs div {
+  font-size: 42px;
+  padding: 0.3em;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow:
+     1px  1px black,
+     1px -1px black,
+    -1px  1px black,
+    -1px -1px black;
+}
+#logs div:last-child {
+  font-size: 120px;
+  padding: 0.2em;
+  /*position: absolute;*/
+  color: white;
+  text-shadow:
+     4px  4px black,
+     4px -4px black,
+    -4px  4px black,
+    -4px -4px black;
+}
+#form {
+  position: fixed;
+  bottom: 0;
+  left: calc(50% - 12em);
+  width: 24em;
+  height: 2em;
+  line-height: 2em;
+  background: rgba(0, 0, 0, 0.7);
+}
+#pointer {
+  position: absolute;
+  width: 2.6em;
+  text-align: right;
+}
+#input {
+  position: absolute;
+  left: 2.6em;
+  width: calc(100% - 2.6em);
+  padding: 0 0.4em;
+}
+#buffer {
+  border-bottom: 2px solid white;
+}
+#suggestionAnchor {
+  position: absolute;
+  width: 100%;
+}
+#suggestions {
+  line-height: 1.1em;
+  position: absolute;
+  padding: 0.3em;
+  left: -0.3em;
+  bottom: 0;
+  white-space: normal;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/*Browser testing*/
+@media only screen and (min-width: 1200px) {
+  html{
+    background:#555;
+  }
+}
