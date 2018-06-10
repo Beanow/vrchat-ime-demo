@@ -91,7 +91,7 @@ html, body {
   bottom: 0;
   white-space: normal;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.95);
 }
 
 /*Browser testing*/
