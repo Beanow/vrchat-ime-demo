@@ -1,16 +1,15 @@
-const $ = require('jquery');
-const wanakana = require('wanakana');
+const MAX_SUGGEST = 5;
+const GET_MODE = /^#([a-z]+)\|/i;
 
 const inputtoolsDefaults = {
-	itc: 'ja-t-ja-hira-i0-und',
-	num: 5
+	itc: 'ja-t-ja-hira-i0-und'
 };
 
 const fetchSuggestions = exports.fetchSuggestions = (buffer, num, itc) => {
 	const params = new URLSearchParams();
 	params.set('text', buffer);
 	params.set('itc', itc || inputtoolsDefaults.itc);
-	params.set('num', num || inputtoolsDefaults.num);
+	params.set('num', num || MAX_SUGGEST);
 	// Google sets these values in its own AJAX calls, but they're
 	// cryptic and undocumented, so I'm passing them along.
 	params.set('cp', 0);
@@ -62,12 +61,18 @@ const logError = (state, error) => ({
 const setSuggestions = (state, suggest) => ({
 	...state,
 	suggest,
+	loading: false
+});
+
+const suggestionsLoading = state => ({
+	...state,
+	loading: true,
 	active: 0
 });
 
-const incrementActive = state => ({
+const setActive = (state, active) => ({
 	...state,
-	active: ++state.active % state.suggest.length
+	active
 });
 
 const popLetter = state =>
@@ -102,7 +107,11 @@ const cycleSuggestions = (state, cb) => {
 	}
 
 	if(state.suggest.length > 0) {
-		return incrementActive(state);
+		return setActive(state, ++state.active % state.suggest.length);
+	}
+
+	if(state.loading) {
+		return setActive(state, ++state.active % MAX_SUGGEST);
 	}
 
 	try {
@@ -119,7 +128,7 @@ const cycleSuggestions = (state, cb) => {
 		return logError(state, e.message);
 	}
 
-	return state;
+	return suggestionsLoading(state);
 };
 
 const setMode = (state, mode) => ({
@@ -154,11 +163,12 @@ const keyEN = (state, key, _) => {
 	return pushOutput(state, key);
 };
 
-const makeState = () => ({
-	mode: 'EN',
+const makeState = mode => ({
+	mode: mode || 'EN',
 	output: '',
 	buffer: '',
 	typing: '',
+	loading: false,
 	suggest: [],
 	active: 0,
 	log: []
@@ -176,7 +186,9 @@ const captureMode = (modes, state, key, cb) => {
 };
 
 const makeKeyFn = exports.makeKeyFn = (toHiragana, onStateChange) => {
-	let state = makeState();
+	const hashContent = window.location.hash.match(GET_MODE);
+	const initialMode = hashContent && hashContent[1] || null;
+	let state = makeState(initialMode);
 	const MODES = {
 		JP: keyJP(toHiragana),
 		EN: keyEN
@@ -188,8 +200,8 @@ const makeKeyFn = exports.makeKeyFn = (toHiragana, onStateChange) => {
 	};
 
 	const keyFn = key => {
-		window.location.hash = '#' + Math.random();
 		state = captureMode(MODES, state, key, cb);
+		window.location.hash = `#${state.mode}|${Math.random()}`;
 		onStateChange({...state});
 	};
 
@@ -197,80 +209,4 @@ const makeKeyFn = exports.makeKeyFn = (toHiragana, onStateChange) => {
 		keyFn,
 		initialState: {...state}
 	};
-};
-
-exports.bindIME = options => {
-	const modeEl = $(options.mode);
-	const outputEl = $(options.output);
-	const bufferEl = $(options.buffer);
-	const trapEl = $(options.trap);
-	const logEl = $(options.log);
-	const suggestionEl = $(options.suggestion);
-	const toHiragana = input => wanakana.toHiragana(input, {IMEMode: true});
-
-	const render = state => {
-		let out = '';
-		for(let i in state.suggest) {
-			out += state.suggest[i];
-			if(i == state.active) {
-				out += '*';
-			}
-			out += '<br>';
-		}
-		suggestionEl.html(out.length ? `<div id="suggestions">${out}</div>` : '');
-		bufferEl.html(state.suggest.length ? state.suggest[state.active] : state.buffer);
-		outputEl.html(state.output);
-		modeEl.html(state.mode);
-		logEl.html(`<div>${state.log.join('</div><div>')}</div>`);
-		trapEl.val('').focus();
-	};
-
-	const {keyFn, initialState} = makeKeyFn(toHiragana, render);
-
-	trapEl.bind('keypress', e => {
-		const charCode = String.fromCharCode(e.charCode);
-
-		// Use [`] for mode switch.
-		if (charCode === '`') {
-			e.preventDefault();
-			keyFn('MODE');
-			return;
-		}
-
-		// Letters get pushed.
-		if (charCode != '') {
-			e.preventDefault();
-			keyFn(charCode);
-		}
-	});
-
-	trapEl.bind("keydown", function(e) {
-		// Hit [Enter] for suggestion acceptance.
-		if (e.which === 13) {
-			e.preventDefault();
-			keyFn('ENT');
-		}
-
-		// On backspace, drop the last char.
-		if (e.which === 8) {
-			e.preventDefault();
-			keyFn('BS');
-		}
-
-		// On delete, drop the last log line.
-		if (e.which === 46) {
-			e.preventDefault();
-			keyFn('RM');
-		}
-
-		// Use [TAB] for mode switch.
-		if (e.which === 9) {
-			e.preventDefault();
-			keyFn('MODE');
-		}
-	});
-
-	render(initialState);
-
-	return keyFn;
 };
