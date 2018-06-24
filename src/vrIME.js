@@ -205,8 +205,17 @@ const makeKeyFn = exports.makeKeyFn = (toHiragana, onStateChange) => {
 		onStateChange({...state});
 	};
 
+	const modeFn = mode => {
+		if(state.mode !== mode){
+			state = clearBuffer(setMode(state, mode));
+			window.location.hash = `#${state.mode}|${Math.random()}`;
+			onStateChange({...state});
+		}
+	};
+
 	return {
 		keyFn,
-		initialState: {...state}
+		initialState: {...state},
+		modeFn
 	};
 };

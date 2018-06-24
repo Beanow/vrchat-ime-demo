@@ -33,7 +33,7 @@ const bindIME = options => {
 		trapEl.val('').focus();
 	};
 
-	const {keyFn, initialState} = makeKeyFn(toHiragana, render);
+	const {keyFn, initialState, modeFn} = makeKeyFn(toHiragana, render);
 
 	trapEl.bind('keypress', e => {
 		const charCode = String.fromCharCode(e.charCode);
@@ -80,9 +80,14 @@ const bindIME = options => {
 
 	render(initialState);
 
-	return keyFn;
+	window.key = keyFn;
+	window.mode = modeFn;
+	window.text = function(str){
+		for(var i = 0; i < str.length; i++){
+			window.key(str[i]);
+		}
+	};
 };
-
 
 // Start with debug details.
 document.getElementById('logs').innerHTML =
@@ -95,7 +100,7 @@ document.getElementById('logs').innerHTML =
 
 // Attemp a binding.
 try {
-	window.key = bindIME({
+	bindIME({
 		log: '#logs',
 		mode: '#mode',
 		output: '#output',
@@ -103,11 +108,6 @@ try {
 		trap: '#inputTrap',
 		suggestion: '#suggestionAnchor'
 	});
-	window.text = function(str){
-		for(var i = 0; i < str.length; i++){
-			window.key(str[i]);
-		}
-	};
 } catch(e) {
 	document.getElementById('logs').innerHTML = 'Error binding IME ' + e.toString();
 }
