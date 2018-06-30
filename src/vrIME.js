@@ -86,10 +86,16 @@ const removeLine = state =>
 
 const commitSuggestion = state =>
 	state.buffer.length === 0 ? logOutput(state) :
+	state.suggest.length === 0 ? logOutput({...state, output: state.output + state.buffer}) :
 	clearBuffer({
 		...state,
 		output: state.output + (state.suggest.length > 0 ? state.suggest[state.active] : state.buffer)
 	});
+
+const commitSuggestionWhenSelected = state =>
+	state.suggest.length > 0 ?
+	clearBuffer({...state, output: state.output + state.suggest[state.active]}) :
+	state
 
 const pushBuffer = (toHiragana, state, char, opts) => ({
 	...state,
@@ -150,15 +156,15 @@ const KEYS_EN = {
 };
 
 const keyJP = toHiragana => (state, key, cb) => {
-	if(KEYS_JP[key]) {
-		return KEYS_JP[key](state, cb);
+	if(KEYS_JP[key.toUpperCase()]) {
+		return KEYS_JP[key.toUpperCase()](state, cb);
 	}
-	return pushBuffer(toHiragana, clearSuggestions(state), key);
+	return pushBuffer(toHiragana, commitSuggestionWhenSelected(state), key);
 };
 
 const keyEN = (state, key, _) => {
-	if(KEYS_EN[key]) {
-		return KEYS_EN[key](state, () => {});
+	if(KEYS_EN[key.toUpperCase()]) {
+		return KEYS_EN[key.toUpperCase()](state, () => {});
 	}
 	return pushOutput(state, key);
 };
