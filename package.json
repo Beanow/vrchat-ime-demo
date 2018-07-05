@@ -5,7 +5,8 @@
   "author": "https://github.com/Beanow",
   "main": "dist/vrIME.js",
   "scripts": {
-    "dist": "webpack -p --progress"
+    "dist": "webpack -p --progress",
+    "dev": "webpack -d --progress --watch"
   },
   "dependencies": {
     "url-search-params-polyfill": "^4.0.0",
