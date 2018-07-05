@@ -27,7 +27,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: /\.jsx?$/,
 		        use: {
 		        	loader: 'babel-loader',
 		        	options: {
@@ -36,7 +36,8 @@ module.exports = {
 							'transform-es2015-block-scoping',
 							'transform-es2015-template-literals',
 							'syntax-object-rest-spread',
-							'transform-object-rest-spread'
+							'transform-object-rest-spread',
+							["transform-react-jsx", { "pragma":"h" }]
 						]
 					}
 				}
@@ -54,7 +55,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 			filename: 'index.html',
-			inlineSource: '.(js|css)$' // embed all javascript and css inline
+			inlineSource: '.(js|jsx|css)$' // embed all javascript and css inline
 		}),
 		new HtmlWebpackInlineSourcePlugin()
 		// new ExtractTextPlugin('./src/style.css')
