@@ -86,7 +86,6 @@ const removeLine = state =>
 
 const commitSuggestion = state =>
 	state.buffer.length === 0 ? logOutput(state) :
-	state.suggest.length === 0 ? logOutput({...state, output: state.output + state.buffer}) :
 	clearBuffer({
 		...state,
 		output: state.output + (state.suggest.length > 0 ? state.suggest[state.active] : state.buffer)
