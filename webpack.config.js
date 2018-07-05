@@ -57,7 +57,11 @@ module.exports = {
 			filename: 'index.html',
 			inlineSource: '.(js|jsx|css)$' // embed all javascript and css inline
 		}),
+		new HtmlWebpackPlugin({
+			template: './src/index.jokes.html',
+			filename: 'index.jokes.html',
+			inlineSource: '.(js|jsx|css)$' // embed all javascript and css inline
+		}),
 		new HtmlWebpackInlineSourcePlugin()
-		// new ExtractTextPlugin('./src/style.css')
 	]
 };
