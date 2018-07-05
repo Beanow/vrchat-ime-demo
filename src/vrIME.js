@@ -1,37 +1,3 @@
-const MAX_SUGGEST = 5;
-const GET_MODE = /^#([a-z]+)\|/i;
-
-const inputtoolsDefaults = {
-	itc: 'ja-t-ja-hira-i0-und'
-};
-
-const fetchSuggestions = exports.fetchSuggestions = (buffer, num, itc) => {
-	const params = new URLSearchParams();
-	params.set('text', buffer);
-	params.set('itc', itc || inputtoolsDefaults.itc);
-	params.set('num', num || MAX_SUGGEST);
-	// Google sets these values in its own AJAX calls, but they're
-	// cryptic and undocumented, so I'm passing them along.
-	params.set('cp', 0);
-	params.set('cs', 1);
-	// Input and output encoding
-	params.set('ie', 'utf-8');
-	params.set('oe', 'utf-8');
-	// Doesn't seem to matter what this is.
-	params.set('app', 'test');
-
-	return fetch(`https://inputtools.google.com/request?${params.toString()}`)
-	.then(response => response.json())
-	.catch(error => Promise.reject(`Error fetching suggestions: ${error}`))
-	.then(result => {
-		if(!result[1] || !result[1][0] || !result[1][0][1]) {
-			return Promise.reject(`Result had unexpected format: ${result}`);
-		}
-
-		return result[1][0][1];
-	});
-};
-
 const clearSuggestions = state => ({
 	...state,
 	suggest: [],
@@ -55,7 +21,7 @@ const logOutput = state => clearAll({
 
 const logError = (state, error) => ({
 	...state,
-	log: [...state.log, `ERROR: error`]
+	log: [...state.log, `ERROR: ${error}`]
 });
 
 const setSuggestions = (state, suggest) => ({
@@ -106,7 +72,7 @@ const pushOutput = (state, char) => ({
 	output: state.output + char
 });
 
-const cycleSuggestions = (state, cb) => {
+const cycleSuggestions = (state, cb, fetchSuggestions) => {
 	if(state.buffer.length === 0) {
 		return state;
 	}
@@ -154,9 +120,9 @@ const KEYS_EN = {
 	ENT: logOutput
 };
 
-const keyJP = toHiragana => (state, key, cb) => {
+const keyJP = (toHiragana, fetchSuggestions) => (state, key, cb) => {
 	if(KEYS_JP[key.toUpperCase()]) {
-		return KEYS_JP[key.toUpperCase()](state, cb);
+		return KEYS_JP[key.toUpperCase()](state, cb, fetchSuggestions);
 	}
 	return pushBuffer(toHiragana, commitSuggestionWhenSelected(state), key);
 };
@@ -190,12 +156,11 @@ const captureMode = (modes, state, key, cb) => {
 	return modes[state.mode](state, key, cb);
 };
 
-const makeKeyFn = exports.makeKeyFn = (toHiragana, onStateChange) => {
-	const hashContent = window.location.hash.match(GET_MODE);
-	const initialMode = hashContent && hashContent[1] || null;
+exports.makeReducers = (toHiragana, onStateChange, suggest, initialMode) => {
 	let state = makeState(initialMode);
+
 	const MODES = {
-		JP: keyJP(toHiragana),
+		JP: keyJP(toHiragana, suggest.JP),
 		EN: keyEN
 	};
 
@@ -206,21 +171,19 @@ const makeKeyFn = exports.makeKeyFn = (toHiragana, onStateChange) => {
 
 	const keyFn = key => {
 		state = captureMode(MODES, state, key, cb);
-		window.location.hash = `#${state.mode}|${Math.random()}`;
 		onStateChange({...state});
 	};
 
 	const modeFn = mode => {
 		if(state.mode !== mode){
 			state = clearBuffer(setMode(state, mode));
-			window.location.hash = `#${state.mode}|${Math.random()}`;
 			onStateChange({...state});
 		}
 	};
 
 	return {
-		keyFn,
 		initialState: {...state},
+		keyFn,
 		modeFn
 	};
 };

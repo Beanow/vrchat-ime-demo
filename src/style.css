@@ -23,6 +23,10 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+.kusou {
+  height: 0.9em;
+  margin: 0 0.05em;
+}
 #logs {
   position: fixed;
   bottom: 2.8em;
