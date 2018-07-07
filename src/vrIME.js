@@ -18,7 +18,8 @@ const clearAll = state => clearBuffer({
 
 const logOutput = state => clearAll({
 	...state,
-	log: state.output.length > 0 ? [...state.log, state.output] : state.log
+	log: state.output.length > 0 ? [...state.log, state.output] : state.log,
+	showGuide: false
 });
 
 const logError = (state, error) => ({
@@ -144,7 +145,8 @@ const makeState = mode => ({
 	loading: false,
 	suggest: [],
 	active: 0,
-	log: []
+	log: [],
+	showGuide: true
 });
 
 const captureMode = (modes, state, key, cb) => {

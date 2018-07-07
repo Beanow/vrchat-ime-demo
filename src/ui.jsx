@@ -34,15 +34,56 @@ const FormInput = ({output, suggest, active, buffer, onKeyPress, onKeyDown, useJ
 	</div>
 );
 
-const Form = (props) => (
+const Form = props => (
 	<div id="form">
 		<FormPointer mode={props.mode} />
 		<FormInput {...props} />
 	</div>
 );
 
+const GuideKey = ({children, label}) => (
+	<div className="keyGroup">
+		<div className="key">{label}</div>
+		<div className="content">{children}</div>
+	</div>
+);
+
+const Guide = ({show}) => (
+	<div id="guide" className={show ? 'show' : ''}>
+		<h2>How to use</h2>
+		<p>
+			Click on the keyboard buttons to press,<br />
+			or enter the seat to type with your real keyboard.
+		</p>
+		<p>
+			<GuideKey label="Tab ↹">
+				Change input language<br />
+				言語を変わります
+			</GuideKey>
+			<GuideKey label="Space">
+				Cycle through suggestions (JP mode)<br />
+				サジェスチョンを循環します (JPモード)
+			</GuideKey>
+			<GuideKey label="Enter">
+				Confirm selection (JP mode)<br />
+				セレクションを確認します (JPモード)
+			</GuideKey>
+			<GuideKey label="Home">
+				Center your view (in VR)<br />
+				方向リセット (VRで)
+			</GuideKey>
+		</p>
+		<p><small>
+			To type with your keyboard, make sure the game is selected in Windows.<br />
+			Centering tip, move to a comfortable position in front of your keyboard.
+			Then press the <code>[Home]</code> button.
+		</small></p>
+	</div>
+);
+
 exports.App = props => (
 	<div id="app">
+		<Guide show={props.showGuide} />
 		<Logs {...props} />
 		<Form {...props} />
 	</div>

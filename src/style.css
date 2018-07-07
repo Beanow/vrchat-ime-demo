@@ -27,6 +27,42 @@ html, body {
   height: 0.9em;
   margin: 0 0.05em;
 }
+#guide {
+  position: fixed;
+  bottom: 5em;
+  left: calc(50% - 425px);
+  width: 850px;
+  padding: 1em;
+  border: 3px solid #aaa;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 26px;
+  line-height: 1.3em;
+  opacity: 0;
+  transition: opacity ease-out 100ms;
+}
+#guide.show {
+  opacity: 1;
+}
+#guide h1, h2, h3{
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.keyGroup {
+  margin: 1em 0;
+}
+.keyGroup .key {
+  float: left;
+  line-height: 1.4em;
+  width: 140px;
+  padding: 0.3em;
+  margin: 0.25em 0.5em;
+  border: 1px solid #333;
+  background: #eee;
+  color: #000;
+  text-align: center;
+  font-weight: bold;
+}
 #logs {
   position: fixed;
   bottom: 2.8em;
@@ -56,7 +92,7 @@ html, body {
      4px -4px black,
     -4px  4px black,
     -4px -4px black;
-  animation: 0.2s growHeight ease-out;
+  animation: 200ms growHeight ease-out;
   overflow:hidden;
 }
 #form {
