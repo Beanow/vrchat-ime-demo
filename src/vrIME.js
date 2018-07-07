@@ -1,3 +1,5 @@
+const MAX_MESSAGE_SIZE = 60;
+
 const clearSuggestions = state => ({
 	...state,
 	suggest: [],
@@ -64,12 +66,12 @@ const commitSuggestionWhenSelected = state =>
 
 const pushBuffer = (toHiragana, state, char, opts) => ({
 	...state,
-	buffer: toHiragana(state.buffer + char)
+	buffer: state.output.length + state.buffer.length < MAX_MESSAGE_SIZE ? toHiragana(state.buffer + char) : state.buffer
 });
 
 const pushOutput = (state, char) => ({
 	...state,
-	output: state.output + char
+	output: state.output.length < MAX_MESSAGE_SIZE ? state.output + char : state.output
 });
 
 const cycleSuggestions = (state, cb, fetchSuggestions) => {
