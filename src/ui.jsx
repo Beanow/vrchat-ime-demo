@@ -9,7 +9,8 @@ const Output = ({output, useJokes}) => <span id="output"><span id="outputClip">{
 
 const Logs = ({log, useJokes}) => (
 	<div id="logs">
-		{log.map(line => <div>{replaceEmojiJokes(line, useJokes)}</div>)}
+		{log.map((line, i) => <div key={i} className={i === log.length-1 ? 'current' : ''}>{replaceEmojiJokes(line, useJokes)}</div>)}
+		<div key={log.length} className="new" />
 	</div>
 );
 
