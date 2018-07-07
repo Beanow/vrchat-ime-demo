@@ -4,8 +4,8 @@ const {replaceEmojiJokes} = require('./jokes');
 const Mode = ({mode}) => <span id="mode">{mode}</span>
 const FormPointer = ({mode}) => <div id="pointer"><Mode mode={mode} />&gt;</div>;
 const InputTrap = ({onKeyPress, onKeyDown}) => <input type="text" autoFocus id="inputTrap" {...{onKeyPress, onKeyDown}} />
-const Buffer = ({buffer, useJokes}) => <span id="buffer">{replaceEmojiJokes(buffer, useJokes)}</span>
-const Output = ({output, useJokes}) => <span id="output">{replaceEmojiJokes(output, useJokes)}</span>
+const Buffer = ({buffer, useJokes}) => <span id="buffer"><span id="bufferClip">{replaceEmojiJokes(buffer, useJokes)}</span></span>
+const Output = ({output, useJokes}) => <span id="output"><span id="outputClip">{replaceEmojiJokes(output, useJokes)}</span></span>
 
 const Logs = ({log, useJokes}) => (
 	<div id="logs">
@@ -13,7 +13,7 @@ const Logs = ({log, useJokes}) => (
 	</div>
 );
 
-const Suggestion = (suggestion, isActive, useJokes) => <div>{replaceEmojiJokes(suggestion, useJokes)}{(isActive ? '*' : '')}</div>
+const Suggestion = (suggestion, isActive, useJokes) => <div className={isActive ? 'active' : ''}>{replaceEmojiJokes(suggestion, useJokes)}</div>
 
 const innerSuggestions = (suggest, active, useJokes) => {
 	if(suggest && suggest.length){
