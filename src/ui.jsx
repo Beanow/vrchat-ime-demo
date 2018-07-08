@@ -59,19 +59,19 @@ const Guide = ({show}) => (
 		<p>
 			<GuideKey label="Tab ↹">
 				Change input language<br />
-				言語を変わります
+				入力言語を変更します
 			</GuideKey>
 			<GuideKey label="Space">
 				Cycle through suggestions (JP mode)<br />
-				サジェスチョンを循環します (JPモード)
+				変換候補を切り替えます (JPモード)
 			</GuideKey>
 			<GuideKey label="Enter">
 				Confirm selection (JP mode)<br />
-				セレクションを確認します (JPモード)
+				変換を確定します (JPモード)
 			</GuideKey>
 			<GuideKey label="Home">
 				Center your view (in VR)<br />
-				方向リセット (VRで)
+				方向にリセットします (VRで)
 			</GuideKey>
 		</p>
 		<p><small>
